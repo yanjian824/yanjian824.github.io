@@ -2,7 +2,7 @@
 layout: post
 title: 回退Mac上用Brew安装的PHP版本
 category: 技术
-tags: [PHP, Mac]
+tags: []
 keywords: PHP,Mac,Brew,旧版本,Version
 description: 
 ---
