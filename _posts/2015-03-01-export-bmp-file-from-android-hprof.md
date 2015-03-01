@@ -7,6 +7,8 @@ keywords: Android,Bitmap,Hprof
 description:
 ---
 
+### 问题背景
+
 做终端APP内存测试时，常常会用DDMS dump出java hprof文件，利用MAT或者jhat这样的工具去分析被测APP的内存使用是否合理。
 
 尤其IM，图片类应用，Top Retained Heap往往少不了Bitmap的身影。再深入一点思考，BitmapFactory.options设置了inSampleSize之后，图片缩小了多少倍，不同的配色方案(ARGB_8888, RGB_565)对图片大小有什么样的影响。
@@ -80,4 +82,59 @@ video:75kB audio:0kB subtitle:0 global headers:0kB muxing overhead -100.028626%
 
 ![](..\..\..\public\img\bmp-120-160.bmp)
 
-### 自动化
+### 自动导出
+
+作为一个懒惰的工程师，当然希望能够自动地从hprof文件中导出所有的bitmap。
+这里我直接借鉴了jhat代码中解析hprof的部分，先把每个Bitamp的mBuffer中的二进制值分别写进单独的文件。
+
+```java
+Snapshot model = null;
+try {
+	model = com.sun.tools.hat.internal.parser.Reader.readFile(fileName, true, 0);
+} catch (IOException e) {
+	// TODO Auto-generated catch block
+	e.printStackTrace();
+}
+
+model.resolve(true);
+
+JavaClass bitmapClass = model.findClass("android.graphics.Bitmap");
+Enumeration instances = bitmapClass.getInstances(false);
+while (instances.hasMoreElements()) {
+	JavaObject instance = (JavaObject) instances.nextElement();
+
+  final JavaThing[] things = instance.getFields();
+  final JavaField[] fields = instance.getClazz().getFieldsForInstance();
+
+  byte[] bytes = {0x0};
+  String height = "";
+  String width = "";
+
+  for (int i = 0; i < fields.length; i++) {
+  	String fieldName = fields[i].getName();
+    if (fieldName.equals("mBuffer")) {
+      if (things[i].getClass().getSimpleName().equals("JavaValueArray")) {
+        bytes = ((JavaValueArray) things[i]).getRawBytes();
+      } else {
+        continue;
+      }
+    } else if (fieldName.equals("mHeight")) {
+      height = things[i].toString();
+    } else if (fieldName.equals("mWidth")) {
+      width = things[i].toString();
+    }
+  }
+
+  int bits = bytes.length / Integer.parseInt(width) / Integer.parseInt(height) * 8;
+  File folder = new File(output);
+  File rgbFile = new File(folder, instance.toString() + "_" + width + "x" + height + "_" + bits + ".rgb");
+	try {
+		FileOutputStream out = new FileOutputStream (rgbFile);
+		out.write(bytes);
+		out.close();
+	} catch (IOException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+}
+```
