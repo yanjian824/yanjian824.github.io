@@ -1,4 +1,11 @@
-## 从Android hprof文件中导出bmp图像文件
+---
+layout: post
+title: 从Android hprof文件中导出bmp图像文件
+category: 技术
+tags: []
+keywords: Android,Bitmap,Hprof
+description: 
+---
 
 做终端APP内存测试时，常常会用DDMS dump出java hprof文件，利用MAT或者jhat这样的工具去分析被测APP的内存使用是否合理。
 
