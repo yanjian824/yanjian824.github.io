@@ -101,6 +101,7 @@ model.resolve(true);
 JavaClass bitmapClass = model.findClass("android.graphics.Bitmap");
 Enumeration instances = bitmapClass.getInstances(false);
 while (instances.hasMoreElements()) {
+
 	JavaObject instance = (JavaObject) instances.nextElement();
 
   final JavaThing[] things = instance.getFields();
@@ -128,13 +129,15 @@ while (instances.hasMoreElements()) {
   int bits = bytes.length / Integer.parseInt(width) / Integer.parseInt(height) * 8;
   File folder = new File(output);
   File rgbFile = new File(folder, instance.toString() + "_" + width + "x" + height + "_" + bits + ".rgb");
+
   try {
     FileOutputStream out = new FileOutputStream (rgbFile);
     out.write(bytes);
     out.close();
   } catch (IOException e) {
-  	// TODO Auto-generated catch block
-  	e.printStackTrace();
+    // TODO Auto-generated catch block
+    e.printStackTrace();
   }
+
 }
 ```
