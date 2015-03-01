@@ -4,18 +4,18 @@ title: 从Android hprof文件中导出bmp图像文件
 category: 技术
 tags: []
 keywords: Android,Bitmap,Hprof
-description: 
+description:
 ---
 
 做终端APP内存测试时，常常会用DDMS dump出java hprof文件，利用MAT或者jhat这样的工具去分析被测APP的内存使用是否合理。
 
 尤其IM，图片类应用，Top Retained Heap往往少不了Bitmap的身影。再深入一点思考，BitmapFactory.options设置了inSampleSize之后，图片缩小了多少倍，不同的配色方案(ARGB_8888, RGB_565)对图片大小有什么样的影响。
 
-![](mat-bitmap.png)
+![](..\..\..\public\img\mat-bitmap.png)
 
 稍有经验的同学可能会先通过引用关系找到目标instance，然后在MAT左侧的Inspector Tab的Attributes栏目中去观察mBuffer，mHeight, mWidth的大小。
 
-![](mat-inspector.png)
+![](..\..\..\public\img\mat-inspector.png)
 
 面对二进制的数据总有点陌生的感觉，如何能把mBuffer转换成图像文件那该多好。
 
@@ -25,7 +25,7 @@ description:
 
 接着，在dominator_tree视图中找到目标Bitamp，弹出右键菜单，选择【Copy】-> 【Save Value to File】。
 
-![](mat-save-value-to-file.png)
+![](..\..\..\public\img\mat-save-value-to-file.png)
 
 用保存好的文件size/(mWidth*mHeight)来判断是RGBA_8888，还是RGB_565。
 
