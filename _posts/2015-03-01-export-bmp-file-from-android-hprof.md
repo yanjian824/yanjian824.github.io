@@ -102,7 +102,7 @@ JavaClass bitmapClass = model.findClass("android.graphics.Bitmap");
 Enumeration instances = bitmapClass.getInstances(false);
 while (instances.hasMoreElements()) {
 
-	JavaObject instance = (JavaObject) instances.nextElement();
+  JavaObject instance = (JavaObject) instances.nextElement();
 
   final JavaThing[] things = instance.getFields();
   final JavaField[] fields = instance.getClazz().getFieldsForInstance();
