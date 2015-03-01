@@ -75,3 +75,9 @@ Press [q] to stop, [?] for help
 frame=    1 fps=0.0 q=-1.0 Lsize=N/A time=00:00:00.04 bitrate=N/A
 video:75kB audio:0kB subtitle:0 global headers:0kB muxing overhead -100.028626%
 ```
+
+来看看转换好的bmp图片吧。
+
+![](..\..\..\public\img\bmp-120-160.bmp)
+
+### 自动化
