@@ -1,17 +1,18 @@
 ---
 layout: post
-title: 装饰器用法示例 - 检查函数的参数
+title: Python装饰器用法示例 - 检查函数的参数类型
 category: 技术
 tags: []
 keywords: Python,Decorator
 description:
 ---
 
-关于python decorator, 这里就不累述了，推荐左耳朵耗子的博文[Python修饰器的函数式编程](http://coolshell.cn/articles/11265.html)。下面分享自己在具体工作中遇到的一个例子。
+关于python decorator, 这里就不累述了，推荐左耳朵耗子的博文[Python修饰器的函数式编程](http://coolshell.cn/articles/11265.html)。
+下面主要分享自己在工作中遇到的一个案例。
 
 ## 问题背景
 
-最近一段时间，在做图像类应用的测试，其中涉及到图像算法采用opencv python bindings来实现，比如下面这几个函数接口。
+最近一段时间在做图像类应用的测试，其中涉及到图像算法采用opencv python bindings来实现，比如下面这几个函数接口。
 
 ```python
 def get_perceptual_hash(source):
@@ -25,13 +26,13 @@ def diff_image(base_image, compare_image, diff_image_prefix):
     # 省略若干代码
 ```
 
-
-团队内部的测试代码默认采用utf8编码的字符串，或者是unicode。在locale为中文情况下，opencv python bindings的API只接受gbk格式的字符串。
-
-那么问题就来了，我需要在读取图像文件做算法之前，对source/base_image/compare_image这些参数做一个的类型转换，转成gbk编码。
+团队内部的测试代码默认采用utf8编码的字符串，或者是unicode。在locale为中文情况下，opencv python bindings的API只接受gbk格式的文件路径字符串。
+那么问题就来了，我需要在读取图像文件做算法之前，对source/base_image/compare_image这些参数一个个做类型转换转成gbk编码？
 
 ```python
+# 非装饰器版本
 def get_perceptual_hash(srouce):  
+
     if isinstance(source, unicode):
         source = source.encode('gbk')
     elif isinstance(srouce, str):
@@ -42,6 +43,7 @@ def get_perceptual_hash(srouce):
     # 省略若干代码
 
 def diff_image(base_image, compare_image, compare_image, diff_image_prefix):
+
     for image in [base_image, compare_image]:
         if isinstance(image, unicode):
             image = image.encode('gbk')
@@ -52,7 +54,7 @@ def diff_image(base_image, compare_image, compare_image, diff_image_prefix):
     # 省略若干代码
 ```
 
-这样显得代码重复，完成可以写个装饰器，在真正的逻辑执行前完成参数的类型转换。
+这样显得繁琐了点，也不容易维护。我们完全可以写个装饰器，在真正的逻辑执行前完成参数的类型转换。
 
 ## 解决方案
 
