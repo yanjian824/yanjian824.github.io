@@ -26,8 +26,7 @@ def diff_image(base_image, compare_image, diff_image_prefix):
     # 省略若干代码
 ```
 
-团队内部的测试代码默认采用utf8编码的字符串，或者是unicode。在locale为中文情况下，opencv python bindings的API只接受gbk格式的文件路径字符串。
-那么问题就来了，我需要在读取图像文件做算法之前，对source/base_image/compare_image这些参数一个个做类型转换转成gbk编码？
+团队内部的测试代码默认采用utf8编码的字符串，或者是unicode。在locale为中文情况下，opencv python bindings的API只接受gbk格式的文件路径字符串。那么问题就来了，我需要在读取图像文件做算法之前，对source/base_image/compare_image这些参数一个个做类型转换转成gbk编码？
 
 ```python
 # 非装饰器版本
@@ -42,7 +41,7 @@ def get_perceptual_hash(srouce):
 
     # 省略若干代码
 
-def diff_image(base_image, compare_image, compare_image, diff_image_prefix):
+def diff_image(base_image, compare_image, diff_image_prefix):
 
     for image in [base_image, compare_image]:
         if isinstance(image, unicode):
@@ -54,7 +53,7 @@ def diff_image(base_image, compare_image, compare_image, diff_image_prefix):
     # 省略若干代码
 ```
 
-这样显得繁琐了点，也不容易维护。我们完全可以写个装饰器，在真正的逻辑执行前完成参数的类型转换。
+这样显然繁琐了点，也不容易维护。我们完全可以写个装饰器，在真正的逻辑执行前完成参数的类型转换。
 
 ## 解决方案
 
@@ -109,4 +108,17 @@ def convert_arguments_to_unicode(arguments):
         return wrapper
 
     return make_wrapper
+```
+
+再来看看装饰器版本的代码吧, 是不是简洁明了。
+
+```python
+# 装饰器版本
+@convert_arguments_to_unicode(['source'])
+def get_perceptual_hash(srouce):  
+    # 省略若干代码
+
+@convert_arguments_to_unicode(['base_image', 'compare_image'])
+def diff_image(base_image, compare_image, diff_image_prefix):
+    # 省略若干代码
 ```
