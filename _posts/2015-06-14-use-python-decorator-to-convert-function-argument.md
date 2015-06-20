@@ -7,8 +7,7 @@ keywords: Python,Decorator
 description:
 ---
 
-关于python decorator, 这里就不累述了，推荐左耳朵耗子的博文[Python修饰器的函数式编程](http://coolshell.cn/articles/11265.html)。
-下面主要分享自己在工作中遇到的一个案例。
+关于python decorator, 这里就不累述了，推荐左耳朵耗子的博文[Python修饰器的函数式编程](http://coolshell.cn/articles/11265.html)。下面主要分享自己在工作中遇到的一个案例。
 
 ## 问题背景
 
@@ -21,7 +20,7 @@ def get_perceptual_hash(source):
     # 省略若干代码
 
 def diff_image(base_image, compare_image, diff_image_prefix):
-    """生成base_image, compare_image的差异文件
+    """生成base_image, compare_image的差异图片
     """
     # 省略若干代码
 ```
@@ -53,25 +52,32 @@ def diff_image(base_image, compare_image, diff_image_prefix):
     # 省略若干代码
 ```
 
-这样显然繁琐了点，也不容易维护。我们完全可以写个装饰器，在真正的逻辑执行前完成参数的类型转换。
+这样的代码显得繁琐，也不容易维护。可以写个【装饰器函数】，接受【被装饰函数】的参数名作为【装饰器函数】的参数，在真正的算法逻辑执行前完成参数的类型转换。嗯，用代码描述是这样的。
+```python
+@convert_arguments_to_unicode(['param_2'])
+def func(param_1, param_2):
+  pass
+```
+上面的例子中，函数func的逻辑真正执行前，param_2已经完成了类型转换。
+
 
 ## 解决方案
 
-首先，在python里面函数也是对象，那来看看这个对象有些什么样的属性吧？
+问题的难点，怎么从被装饰函数的参数列表(*args, **kwargs)中，找到指定名字的参数并完成修改。在python语言中，函数也是对象，那么这个对象有哪些属性可以来利用呢？经过一番搜索，在官网上找到了答案。
 
 [Data model](https://docs.python.org/2/reference/datamodel.html)
 - co_argcount is the number of positional arguments
 - co_varnames is a tuple containing the names of the local variables (starting with the argument names)
 
 ```python
->>> def func(a, b):
-...     print "a is ", a
-...     print "b is ", b
+>>> def func(param_1, param_2):
+...     print "param_1 is ", param_1
+...     print "param_2 is ", param_2
 ...
 >>> func.func_code.co_names
 2
 >>> func.func_code.co_varnames
-('a', 'b')
+('param_1', 'param_2')
 ```
 
 理解了上面这段示例，就可以动手写装饰器函数了，暂时只处理函数的匿名参数*args
