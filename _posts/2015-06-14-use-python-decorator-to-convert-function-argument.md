@@ -75,7 +75,7 @@ def func(param_1, param_2):
 ...     print "param_1 is ", param_1
 ...     print "param_2 is ", param_2
 ...
->>> func.func_code.co_names
+>>> func.func_code.co_argcount
 2
 >>> func.func_code.co_varnames
 ('param_1', 'param_2')
