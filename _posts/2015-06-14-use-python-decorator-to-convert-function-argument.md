@@ -53,13 +53,14 @@ def diff_image(base_image, compare_image, diff_image_prefix):
 ```
 
 这样的代码显得繁琐，也不容易维护。可以写个【装饰器函数】，接受【被装饰函数】的参数名作为【装饰器函数】的参数，在真正的算法逻辑执行前完成参数的类型转换。嗯，用代码描述是这样的。
+
 ```python
 @convert_arguments_to_unicode(['param_2'])
 def func(param_1, param_2):
   pass
 ```
-上面的例子中，函数func的逻辑真正执行前，param_2已经完成了类型转换。
 
+上面的例子中，函数func的逻辑真正执行前，param_2已经完成了类型转换。
 
 ## 解决方案
 
