@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Android内存测试 - 从Android hprof文件中导出bmp图像文件
+title: 【Android】【内存】 - 从Android hprof文件中导出bmp图像文件
 category: 技术
 tags: []
 keywords: Android,Bitmap,Hprof
