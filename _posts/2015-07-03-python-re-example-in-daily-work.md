@@ -1,37 +1,36 @@
 ---
 layout: post
-title: 列举工作中用过的python正则表达式示例
+title: python正则表达式示例
 category: 技术
 tags: []
 keywords: Python,正则表达式
 description:
 ---
 
-## 后向肯定断言 (?<=pattern) positive-look-behind-assertion
+## 后向肯定断言 (?<=pattern)
+工程代码中有一个kEnableWMCTimeLog的编译宏，若kEnableWMCTimeLog值为1，编译出的build可以输出性能日志。出于种种原因，开发同学不想在主干代码上打开这个宏。于是，我们新建了一个CI任务，在拉取工程代码后，工程真正编译前，新加一个task, 这个task能够利用正则表达式修改代码。简单来讲，就是希望能够匹配到kEnableWMCTimeLog后面的这个0，把0修改成1，然后保存代码，但是不匹配kEnableWMCTimeLog本身。
 ```c
-省略若干代码
-
+// 工程代码
 #define kEnableWMCTimeLog  0
-
-省略若干代码
 ```
-工程代码中有一个kEnableWMCTimeLog的编译宏，若kEnableWMCTimeLog值为1，编译出的build可以输出性能日志。出于种种原因，开发同学不想在主干代码上打开这个宏。于是，我们想新建了一个CI任务，在拉取工程代码后，工程真正编译前，新加一个task, 这个task能够利用正则表达式修改代码。简单来讲，就是希望能够匹配到kEnableWMCTimeLog后面的这个0，把0修改成1，然后保存代码，但是不匹配kEnableWMCTimeLog本身。
-
 ```python
 pattern = re.compile(u"(?<=\skEnableWMCTimeLog\s)\s*0")
 new_code = re.sub(pattern, supplement, orignal_code)
 ```
 触类旁通，
-- negative-look-behind-assertion (?<!pattern)
-- positive-look-ahead-assertion (?=pattern)
-- negative-look-ahead-assertion (?!pattern)
+- 后向否定断言 (?<!pattern)
+- 前向肯定断言 (?=pattern)
+- 前向否定断言 (?!pattern)
 
 ## Named Group - 给匹配的分组起名
-我们的测试报告是html格式的，页面中所以img元素的src属性值即图片的网络地址。
+测试报告是html格式的，页面中所以img元素的src属性值即图片的网络地址。
+
 ```html
 <img width="180" src="http://xxx.yyy.zzz/static/CosmeticsHairDyeingTest.1.jpg">
 ```
+
 如果想要匹配所有的图片地址，有以下正则表达式，程序输出如下。
+
 ```python
 pattern = re.compile(u'(?<=src=")(?P<url>.*)(?=")')
 for match in re.finditer(pattern, original_content):
@@ -39,6 +38,7 @@ for match in re.finditer(pattern, original_content):
 	print "match.group('url') %s" %  match.group('url')
 	print "*" * 60
 ```
+
 ```shell
 match.group(0) http://xxx.yyy.zzz/static/CosmeticsHairDyeingTest.1.jpg
 match.group('url') http://xxx.yyy.zzz/static/CosmeticsHairDyeingTest.1.jpg
@@ -49,8 +49,8 @@ match.group('url') http://xxx.yyy.zzz/static/CosmeticsHairDyeingTest.baseline.jp
 match.group(0) CosmeticsHairDyeingTest.diff.1.2.jpg
 match.group('url') http://xxx.yyy.zzz/static/CosmeticsHairDyeingTest.diff.1.2.jpg
 ************************************************************
-......
 ```
+
 match.group等于match.group('url'), ```(?P<url>.*)```就像其实给匹配的内容起了个别名url一样，可以通过这个别名在MatchObject.group()引用被匹配的内容。
 
 ## re.sub(pattern, repl, string, count=0, flags=0)
