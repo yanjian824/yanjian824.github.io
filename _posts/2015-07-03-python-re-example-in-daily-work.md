@@ -1,6 +1,6 @@
 ---
 layout: post
-title: python正则表达式示例
+title: Python正则表达式示例
 category: 技术
 tags: []
 keywords: Python,正则表达式
