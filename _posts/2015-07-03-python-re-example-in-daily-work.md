@@ -60,7 +60,6 @@ match.group等于match.group('url'), ```(?P<url>.*)```给匹配的内容起了�
 上面的案例中简单地运用re.sub来实现文本替换，有的时候替换的string与被替换的string有一定的关系，有的时候有多处需要被替换成不一样的string，这个时候repl就派上用场了。官网上讲，
 
 > repl can be a string or a function
-
 > If repl is a function, it is called for every non-overlapping occurrence of pattern. The function takes a single match object argument, and returns the replacement string
 
 接着Named Group中的例子往下讲，HTML格式的测试报告需要通过SMTP协议发送给项目组，公司的安全策略邮件中的HTTP链接都会被block掉。好在服务器本地有图片文件，可以为每一个图片创建一个MIMEImage，attach到MIMEMultipart再发出去。
