@@ -82,10 +82,10 @@ msgRoot.attach(msgImage)
 ```python
 num = 1
 def repl_func(matched):
-	global num
-	replacement = "cid:image_%d" % num
-	num += 1
-	return replacement
+  global num
+  replacement = "cid:image_%d" % num
+  num += 1
+  return replacement
 
 new_content = re.sub(pattern, repl_func, original_content)
 ```
