@@ -16,6 +16,7 @@ description:
 ```
 
 ```python
+# 正则表达式
 pattern = re.compile(u"(?<=\skEnableWMCTimeLog\s)\s*0")
 new_code = re.sub(pattern, supplement, orignal_code)
 ```
@@ -31,8 +32,7 @@ new_code = re.sub(pattern, supplement, orignal_code)
 <img width="180" src="http://xxx.yyy.zzz/static/CosmeticsHairDyeingTest.1.jpg">
 ```
 
-如果想要匹配所有的图片地址，有以下正则表达式，程序输出如下。
-
+如果想要匹配所有的图片地址，有以下正则表达式。
 ```python
 pattern = re.compile(u'(?<=src=")(?P<url>.*)(?=")')
 for match in re.finditer(pattern, original_content):
@@ -41,6 +41,7 @@ for match in re.finditer(pattern, original_content):
 	print "*" * 60
 ```
 
+程序输出如下。
 ```shell
 match.group(0) http://xxx.yyy.zzz/static/CosmeticsHairDyeingTest.1.jpg
 match.group('url') http://xxx.yyy.zzz/static/CosmeticsHairDyeingTest.1.jpg
@@ -53,11 +54,11 @@ match.group('url') http://xxx.yyy.zzz/static/CosmeticsHairDyeingTest.diff.1.2.jp
 ************************************************************
 ```
 
-match.group等于match.group('url'), ```(?P<url>.*)```就像其实给匹配的内容起了个别名url一样，可以通过这个别名在MatchObject.group()引用被匹配的内容。
+match.group等于match.group('url'), ```(?P<url>.*)```给匹配的内容起了个别名url一样，可以通过这个别名在MatchObject.group()引用被匹配的内容。
 
 ## re.sub(pattern, repl, string, count=0, flags=0)
-上个案例中简单地运用re.sub来实现文本替换，有的时候替换的string与被替换的string有一定的关系，有的时候有多处需要被替换成不一样的string，这个时候repl就派上用场了。
-官网上讲，
+上面的案例中简单地运用re.sub来实现文本替换，有的时候替换的string与被替换的string有一定的关系，有的时候有多处需要被替换成不一样的string，这个时候repl就派上用场了。官网上讲，
+
 > repl can be a string or a function
 
 > If repl is a function, it is called for every non-overlapping occurrence of pattern. The function takes a single match object argument, and returns the replacement string
@@ -74,7 +75,7 @@ msgImage.add_header('Content-ID', 'image_1')
 
 msgRoot.attach(msgImage)  
 ```
-但是，发出去的HTML文档需要将```<img src="HTTP地址">```替换成```<img src="cid:image_1"```，其中第一个img元素的src为"cid:image_1"，第二个img元素的src为"cid:image_2"，以此类推。这样接收到测试报告邮件的同事才能够看到图片。
+但是，发出去的HTML文档需要将```<img src="HTTP地址">```替换成```<img src="cid:image_1">```，其中第一个img元素的src为"cid:image_1"，第二个img元素的src为"cid:image_2"，以此类推。这样接收到测试报告邮件的同事才能够看到图片。
 
 ```python
 num = 1
