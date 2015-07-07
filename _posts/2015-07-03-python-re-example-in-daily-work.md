@@ -27,12 +27,14 @@ new_code = re.sub(pattern, supplement, orignal_code)
 
 ## Named Group - 给匹配的分组起名
 
-测试报告是html格式的，页面中所以img元素的src属性值即图片的网络地址。
+测试报告是html格式的，页面中所以img元素的src属性值即图片的网络地址
+
 ```html
 <img width="180" src="http://xxx.yyy.zzz/static/CosmeticsHairDyeingTest.1.jpg">
 ```
 
-如果想要匹配所有的图片地址，有以下正则表达式。
+如果想要匹配所有的图片地址，有以下正则表达式
+
 ```python
 pattern = re.compile(u'(?<=src=")(?P<url>.*)(?=")')
 for match in re.finditer(pattern, original_content):
@@ -42,6 +44,7 @@ for match in re.finditer(pattern, original_content):
 ```
 
 程序输出如下
+
 ```shell
 match.group(0) http://xxx.yyy.zzz/static/CosmeticsHairDyeingTest.1.jpg
 match.group('url') http://xxx.yyy.zzz/static/CosmeticsHairDyeingTest.1.jpg
