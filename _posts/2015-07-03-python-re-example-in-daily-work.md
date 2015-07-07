@@ -9,10 +9,12 @@ description:
 
 ## 后向肯定断言 (?<=pattern)
 工程代码中有一个kEnableWMCTimeLog的编译宏，若kEnableWMCTimeLog值为1，编译出的build可以输出性能日志。出于种种原因，开发同学不想在主干代码上打开这个宏。于是，我们新建了一个CI任务，在拉取工程代码后，工程真正编译前，新加一个task, 这个task能够利用正则表达式修改代码。简单来讲，就是希望能够匹配到kEnableWMCTimeLog后面的这个0，把0修改成1，然后保存代码，但是不匹配kEnableWMCTimeLog本身。
+
 ```c
 // 工程代码
 #define kEnableWMCTimeLog  0
 ```
+
 ```python
 pattern = re.compile(u"(?<=\skEnableWMCTimeLog\s)\s*0")
 new_code = re.sub(pattern, supplement, orignal_code)
